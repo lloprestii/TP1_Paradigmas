@@ -5,25 +5,27 @@ using namespace std;
 class Personaje;
 
 class Arma {
-    private:
-        std::string nombre;
+    protected:
+        string nombre;
         int dano_base;
         int durabilidad;
         int velocidad_ataque;
         int precision;
 
     public:
-        Arma(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision);
-
-        string get_nombre() const;
-        int get_dano_base() const;
-        int get_durabilidad() const;
-        int get_velocidad_ataque() const;
-        int get_precision() const;
-        
-        void mostrar_info() const;
-        void usar(Personaje* personaje);
+        Arma() = default;
         virtual ~Arma() = default;
+        
+        // Getters
+        virtual string get_nombre() = 0;
+        virtual int get_dano_base() = 0;
+        virtual int get_durabilidad() = 0;
+        virtual int get_velocidad_ataque() = 0;
+        virtual int get_precision() = 0;
+        
+        // Metodos
+        virtual void mostrar_info() = 0;
+        virtual void usar(Personaje* personaje) = 0;
 };
 
 
