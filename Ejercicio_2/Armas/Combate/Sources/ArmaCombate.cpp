@@ -70,6 +70,7 @@ void ArmaCombate::set_esta_destruida(bool esta_destruida) {
 
 void ArmaCombate::usar(Personaje* personaje) {
     cout << "Usando arma de combate..." << endl;
+    // Acordarse de incluir que el hacha doble golpea dos veces
 }
 
 void ArmaCombate::mostrar_info() {

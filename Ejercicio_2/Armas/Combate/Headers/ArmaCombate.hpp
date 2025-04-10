@@ -45,13 +45,13 @@ class ArmaCombate : public Arma {
         void set_esta_destruida(bool esta_destruida);
 
         // Métodos heredados de Arma
-        virtual string get_nombre() override;
-        virtual int get_dano_base() override;
-        virtual int get_durabilidad() override;
-        virtual int get_velocidad_ataque() override;
-        virtual int get_precision() override;
-        virtual void mostrar_info() override;
-        virtual void usar(Personaje* personaje) override;
+        string get_nombre() override;
+        int get_dano_base() override;
+        int get_durabilidad() override;
+        int get_velocidad_ataque() override;
+        int get_precision() override;
+        void mostrar_info() override;
+        void usar(Personaje* personaje) override;
 
         // Métodos propios de la clase
         void bloquear();
