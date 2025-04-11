@@ -24,7 +24,7 @@ class ArmaCombate : public Arma {
     public:
         ArmaCombate(const string& nombre, int dano_base, int durabilidad, 
                     int velocidad_ataque, int precision, int alcance, int dano_cortante, 
-                    bool es_doble_mano, int probabilidad_critico, int costo_energia);
+                    bool es_doble_mano, int probabilidad_critico, int costo_energia, bool esta_destruida);
 
         ~ArmaCombate() = default;
 
@@ -42,7 +42,6 @@ class ArmaCombate : public Arma {
         void set_es_doble_mano(bool es_doble_mano);
         void set_probabilidad_critico(int probabilidad_critico);
         void set_costo_energia(int costo_energia);
-        void set_esta_destruida(bool esta_destruida);
         void set_durabilidad(int nueva_durabilidad) override;
 
         // Métodos heredados de Arma

@@ -6,7 +6,6 @@ using namespace std;
 
 class ArmaMagica : public Arma {
     private:
-        // Atributos
         string nombre;
         int dano_base;
         int durabilidad;
@@ -17,10 +16,12 @@ class ArmaMagica : public Arma {
         int poder_magico;
         bool encantada;
         int curacion;
+        bool esta_destruida;
+
     public:
         ArmaMagica(string nombre, int dano_base, int durabilidad, int velocidad_ataque, 
                   int precision, int mana_requerido, const string& elemento_magico, 
-                  int poder_magico, bool encantada, int curacion);
+                  int poder_magico, bool encantada, int curacion, bool esta_destruida);
 
         ~ArmaMagica() override = default;
 
@@ -30,6 +31,7 @@ class ArmaMagica : public Arma {
         int get_poder_magico() const;
         bool get_encantada() const;
         int get_curacion() const;
+        bool get_esta_destruida() const;
 
         // Setters
         void set_mana_requerido(int mana);
@@ -46,7 +48,6 @@ class ArmaMagica : public Arma {
         void aumentar_poder_magico(int cantidad);
 
         // Metodos heredados de Arma
-        void usar(Personaje* personaje) override;
         void mostrar_info() override;
         string get_nombre() override;
         int get_dano_base() override;

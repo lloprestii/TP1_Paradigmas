@@ -5,7 +5,7 @@ using namespace std;
 
 class Personaje;
 
-ArmaCombate::ArmaCombate(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int alcance, int dano_cortante, bool es_doble_mano, int probabilidad_critico, int costo_energia):
+ArmaCombate::ArmaCombate(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int alcance, int dano_cortante, bool es_doble_mano, int probabilidad_critico, int costo_energia, bool esta_destruida):
     nombre(nombre),
     dano_base(dano_base),
     durabilidad(durabilidad),
@@ -62,10 +62,6 @@ int ArmaCombate::get_costo_energia() const{
 
 bool ArmaCombate::get_esta_destruida() const {
     return esta_destruida;
-}
-
-void ArmaCombate::set_esta_destruida(bool esta_destruida) {
-    this->esta_destruida = esta_destruida;
 }
 
 void ArmaCombate::set_durabilidad(int nueva_durabilidad) {
@@ -157,6 +153,8 @@ void ArmaCombate::set_probabilidad_critico(int probabilidad_critico) {
 void ArmaCombate::set_costo_energia(int costo_energia) {
     this->costo_energia = costo_energia;
 }
+
+
 
 
 

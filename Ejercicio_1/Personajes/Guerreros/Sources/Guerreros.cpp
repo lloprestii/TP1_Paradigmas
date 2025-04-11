@@ -27,10 +27,21 @@ void Guerrero::set_nombre(string nuevo_nombre) {
 }
 
 void Guerrero::recibir_dano(int dano) {
-    int dano_real = dano - (armadura + resistencia_fisica);
-    if (dano_real > 0) {
-        vida -= dano_real;
-        if (vida < 0) vida = 0;
+    int reduccion_dano = armadura + (resistencia_fisica / 2);
+    int dano_final = dano - reduccion_dano;
+    
+    if (dano_final < 0) {
+        dano_final = 0;
+        cout << nombre << " bloquea todo el daño con su armadura y resistencia!" << endl;
+    } else {
+        cout << nombre << " recibe " << dano_final << " puntos de daño!" << endl;
+    }
+    
+    vida -= dano_final;
+    
+    if (vida <= 0) {
+        vida = 0;
+        cout << nombre << " ha caído en combate!" << endl;
     }
 }
 
@@ -39,38 +50,54 @@ bool Guerrero::esta_vivo() {
 }
 
 void Guerrero::atacar(Personaje* objetivo) {
-    if (esta_vivo()) {
-        // Generador de números aleatorios
-        static mt19937 gen(time(nullptr));
-        uniform_int_distribution<> dis(1, 100);
-        
-        // Primero verificar si el ataque acierta basado en la precisión del arma
-        int roll_precision = dis(gen);
-        if (roll_precision > arma->get_precision()) {
-            cout << nombre << " falla el ataque con " << arma->get_nombre() << "." << endl;
-            return;
-        }
-        
-        // Calcular daño base
-        int dano_base = fuerza + arma->get_dano_base();
-        int dano_final = dano_base;
-        
-        // Verificar si es un golpe crítico basado en la probabilidad de crítico del arma
-        int roll_critico = dis(gen);
-        if (roll_critico <= arma->get_probabilidad_critico()) {
-            dano_final *= 2; // El daño se duplica en golpe crítico
-            cout << "¡Golpe crítico! ";
-        }
-        
-        cout << nombre << " ataca con " << arma->get_nombre() << " causando " << dano_final << " de daño." << endl;
-        objetivo->recibir_dano(dano_final);
-        
-        // Reducir durabilidad del arma
-        if (arma->get_durabilidad() > 0) {
-            // La durabilidad se reduce más rápido con ataques críticos
-            int reduccion_durabilidad = roll_critico <= arma->get_probabilidad_critico() ? 2 : 1;
-            arma->set_durabilidad(arma->get_durabilidad() - reduccion_durabilidad);
-        }
+    if (!esta_vivo()) {
+        cout << nombre << " está muerto y no puede atacar." << endl;
+        return;
+    }
+
+    if (!arma) {
+        cout << nombre << " no tiene un arma equipada!" << endl;
+        return;
+    }
+
+    if (arma->get_esta_destruida()) {
+        cout << "El arma de " << nombre << " está rota y no puede atacar!" << endl;
+        return;
+    }
+
+    srand(time(0));
+    int precision = rand() % 100 + 1;
+    
+    if (precision > arma->get_precision()) {
+        cout << nombre << " falla el ataque con " << arma->get_nombre() << "!" << endl;
+        arma->set_durabilidad(arma->get_durabilidad() - 1);
+        return;
+    }
+    
+    int dano_base = fuerza + arma->get_dano_base();
+    
+    float bonus_velocidad = arma->get_velocidad_ataque() / 100.0;
+    dano_base = dano_base + (dano_base * bonus_velocidad);
+    
+    int critico = rand() % 100 + 1;
+    bool es_critico = critico <= arma->get_probabilidad_critico();
+    
+    int dano_final = dano_base;
+    if (es_critico) {
+        dano_final *= 2;
+        cout << "¡GOLPE CRÍTICO! ";
+    }
+    
+    cout << nombre << " ataca con " << arma->get_nombre() << " causando " << dano_final << " de daño!" << endl;
+    
+    objetivo->recibir_dano(dano_final);
+    
+    int reduccion_durabilidad = es_critico ? 3 : 2;
+    int nueva_durabilidad = arma->get_durabilidad() - reduccion_durabilidad;
+    arma->set_durabilidad(nueva_durabilidad);
+    
+    if (nueva_durabilidad <= 0) {
+        cout << "¡El arma de " << nombre << " se ha roto!" << endl;
     }
 }
 

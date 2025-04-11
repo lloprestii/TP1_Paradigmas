@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ArmaMagica::ArmaMagica(string nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int mana_requerido, const string& elemento_magico, int poder_magico, bool encantada, int curacion){
+ArmaMagica::ArmaMagica(string nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int mana_requerido, const string& elemento_magico, int poder_magico, bool encantada, int curacion, bool esta_destruida){
     this->nombre = nombre;
     this->dano_base = dano_base;
     this->durabilidad = durabilidad;
@@ -14,6 +14,7 @@ ArmaMagica::ArmaMagica(string nombre, int dano_base, int durabilidad, int veloci
     this->poder_magico = poder_magico;
     this->encantada = encantada;
     this->curacion = curacion;
+    this->esta_destruida = false;
 }
 
 // Getters
@@ -35,6 +36,10 @@ bool ArmaMagica::get_encantada() const {
 
 int ArmaMagica::get_curacion() const {
     return curacion;
+}
+
+bool ArmaMagica::get_esta_destruida() const {
+    return esta_destruida;
 }
 
 // Setters
@@ -68,6 +73,10 @@ void ArmaMagica::set_curacion(int curacion) {
     } else {
         cout << "Error: La curación no puede ser negativa" << endl;
     }
+}
+
+void ArmaMagica::set_esta_destruida(bool esta_destruida) {
+    this->esta_destruida = esta_destruida;
 }
 
 // Métodos heredados de Arma
