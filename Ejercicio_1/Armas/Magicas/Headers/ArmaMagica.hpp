@@ -1,6 +1,7 @@
 #pragma once
-#include <string>
 #include "../../Arma.hpp"
+#include <string>
+#include <random>
 
 using namespace std;
 
@@ -11,47 +12,48 @@ class ArmaMagica : public Arma {
         int durabilidad;
         int velocidad_ataque;
         int precision;
+        int dano_magico;
         int mana_requerido;
-        string elemento_magico;
-        int poder_magico;
-        bool encantada;
-        int curacion;
+        int probabilidad_critico;
         bool esta_destruida;
+        int poder_curacion;
 
     public:
-        ArmaMagica(string nombre, int dano_base, int durabilidad, int velocidad_ataque, 
-                  int precision, int mana_requerido, const string& elemento_magico, 
-                  int poder_magico, bool encantada, int curacion, bool esta_destruida);
+        ArmaMagica(const string& nombre, int dano_base, int durabilidad, 
+                   int velocidad_ataque, int precision, int dano_magico, 
+                   int mana_requerido, int probabilidad_critico, bool esta_destruida,
+                   int poder_curacion = 20);
 
-        ~ArmaMagica() override = default;
+        ~ArmaMagica() = default;
 
         // Getters
+        string get_nombre() const override;
+        int get_dano_base() const override;
+        int get_durabilidad() const override;
+        int get_velocidad_ataque() const override;
+        int get_precision() const override;
+        int get_probabilidad_critico() const override;
+        bool get_esta_destruida() const override;
+        
+        // Getters adicionales
+        int get_dano_magico() const;
         int get_mana_requerido() const;
-        string get_elemento_magico() const;
-        int get_poder_magico() const;
-        bool get_encantada() const;
-        int get_curacion() const;
-        bool get_esta_destruida() const;
+        int get_poder_curacion() const;
 
         // Setters
-        void set_mana_requerido(int mana);
-        void set_elemento_magico(string elemento);
-        void set_poder_magico(int poder);
-        void set_encantada(bool encantada);
-        void set_curacion(int curacion);
+        void set_durabilidad(int nueva_durabilidad) override;
+        void set_dano_magico(int dano_magico);
+        void set_mana_requerido(int mana_requerido);
+        void set_poder_curacion(int poder_curacion);
 
-        // Metodos propios de la clase
-        void encantar();
-        void lanzar_hechizo();
+        // Métodos propios
+        void lanzar_hechizo(Personaje* objetivo);
+        void curar(Personaje* objetivo);
         void recargar_mana();
-        void cambiar_elemento(string nuevo_elemento);
-        void aumentar_poder_magico(int cantidad);
-
-        // Metodos heredados de Arma
         void mostrar_info() override;
-        string get_nombre() override;
-        int get_dano_base() override;
-        int get_durabilidad() override;
-        int get_velocidad_ataque() override;
-        int get_precision() override;
+        void mostrar_estado();
+
+    private:
+        bool calcular_critico() const;
+        bool calcular_precision() const;
 };

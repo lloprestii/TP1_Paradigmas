@@ -29,12 +29,19 @@ class ArmaCombate : public Arma {
         ~ArmaCombate() = default;
 
         // Getters
+        string get_nombre() const override;
+        int get_dano_base() const override;
+        int get_durabilidad() const override;
+        int get_velocidad_ataque() const override;
+        int get_precision() const override;
+        int get_probabilidad_critico() const override;
+        bool get_esta_destruida() const override;
+        
+        // Getters adicionales
         int get_alcance() const;
         int get_dano_cortante() const;
         bool get_es_doble_mano() const;
-        int get_probabilidad_critico() const;
         int get_costo_energia() const;
-        bool get_esta_destruida() const;
 
         // Setters
         void set_alcance(int alcance);
@@ -45,11 +52,6 @@ class ArmaCombate : public Arma {
         void set_durabilidad(int nueva_durabilidad) override;
 
         // Métodos heredados de Arma
-        string get_nombre() override;
-        int get_dano_base() override;
-        int get_durabilidad() override;
-        int get_velocidad_ataque() override;
-        int get_precision() override;
         void mostrar_info() override;
 
         // Métodos propios de la clase

@@ -19,19 +19,20 @@ class Arma {
         virtual ~Arma() = default;
         
         // Getters
-        virtual string get_nombre() = 0;
-        virtual int get_dano_base() = 0;
-        virtual int get_durabilidad() = 0;
-        virtual int get_velocidad_ataque() = 0;
-        virtual int get_precision() = 0;
-        virtual int get_probabilidad_critico() = 0;
-        virtual bool get_esta_destruida() = 0;
+        virtual string get_nombre() const = 0;
+        virtual int get_dano_base() const = 0;
+        virtual int get_durabilidad() const = 0;
+        virtual int get_velocidad_ataque() const = 0;
+        virtual int get_precision() const = 0;
+        virtual int get_probabilidad_critico() const = 0;
+        virtual bool get_esta_destruida() const = 0;
         
         // Setters
         virtual void set_durabilidad(int nueva_durabilidad) = 0;
         
-        // Metodos
+        // Métodos
         virtual void mostrar_info() = 0;
+        virtual void usar(Personaje* atacante, Personaje* objetivo) = 0;
 };
 
 
