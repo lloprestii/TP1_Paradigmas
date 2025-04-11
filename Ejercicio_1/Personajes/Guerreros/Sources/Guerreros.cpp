@@ -1,4 +1,5 @@
 #include "../Headers/Guerreros.hpp"
+#include "../../../Armas/Magicas/Headers/ArmaMagica.hpp"
 #include <iostream>
 #include <random>
 #include <ctime>
@@ -10,7 +11,7 @@ Guerrero::Guerrero(string nombre, int vida, int resistencia_fisica, int resisten
       resistencia_magica(resistencia_magica), armadura(armadura), fuerza(fuerza), arma(arma) {}
 
 // Métodos heredados de Personaje
-int Guerrero::get_vida() {
+int Guerrero::get_vida() const {
     return vida;
 }
 
@@ -18,7 +19,7 @@ void Guerrero::set_vida(int nueva_vida) {
     vida = nueva_vida;
 }
 
-string Guerrero::get_nombre() {
+string Guerrero::get_nombre() const {
     return nombre;
 }
 
@@ -26,15 +27,21 @@ void Guerrero::set_nombre(string nuevo_nombre) {
     nombre = nuevo_nombre;
 }
 
-void Guerrero::recibir_dano(int dano) {
-    int reduccion_dano = armadura + (resistencia_fisica / 2);
+void Guerrero::recibir_dano(int dano, bool es_dano_magico) {
+    int reduccion_dano;
+    if (es_dano_magico) {
+        reduccion_dano = (resistencia_magica / 2);
+    } else {
+        reduccion_dano = armadura + (resistencia_fisica / 2);
+    }
+    
     int dano_final = dano - reduccion_dano;
     
     if (dano_final < 0) {
         dano_final = 0;
         cout << nombre << " bloquea todo el daño con su armadura y resistencia!" << endl;
     } else {
-        cout << nombre << " recibe " << dano_final << " puntos de daño!" << endl;
+        cout << nombre << " recibe " << dano_final << " puntos de daño " << (es_dano_magico ? "mágico" : "físico") << "!" << endl;
     }
     
     vida -= dano_final;
@@ -45,7 +52,7 @@ void Guerrero::recibir_dano(int dano) {
     }
 }
 
-bool Guerrero::esta_vivo() {
+bool Guerrero::esta_vivo() const {
     return vida > 0;
 }
 
@@ -55,61 +62,40 @@ void Guerrero::atacar(Personaje* objetivo) {
         return;
     }
 
+    if (!objetivo) {
+        cout << "No hay objetivo válido para atacar." << endl;
+        return;
+    }
+
+    if (!objetivo->esta_vivo()) {
+        cout << "El objetivo ya está muerto." << endl;
+        return;
+    }
+
     if (!arma) {
-        cout << nombre << " no tiene un arma equipada!" << endl;
+        cout << nombre << " no tiene un arma equipada." << endl;
         return;
     }
 
-    if (arma->get_esta_destruida()) {
-        cout << "El arma de " << nombre << " está rota y no puede atacar!" << endl;
-        return;
-    }
-
-    srand(time(0));
-    int precision = rand() % 100 + 1;
-    
-    if (precision > arma->get_precision()) {
-        cout << nombre << " falla el ataque con " << arma->get_nombre() << "!" << endl;
-        arma->set_durabilidad(arma->get_durabilidad() - 1);
-        return;
-    }
-    
-    int dano_base = fuerza + arma->get_dano_base();
-    
-    float bonus_velocidad = arma->get_velocidad_ataque() / 100.0;
-    dano_base = dano_base + (dano_base * bonus_velocidad);
-    
-    int critico = rand() % 100 + 1;
-    bool es_critico = critico <= arma->get_probabilidad_critico();
-    
-    int dano_final = dano_base;
-    if (es_critico) {
-        dano_final *= 2;
-        cout << "¡GOLPE CRÍTICO! ";
-    }
-    
-    cout << nombre << " ataca con " << arma->get_nombre() << " causando " << dano_final << " de daño!" << endl;
-    
-    objetivo->recibir_dano(dano_final);
-    
-    int reduccion_durabilidad = es_critico ? 3 : 2;
-    int nueva_durabilidad = arma->get_durabilidad() - reduccion_durabilidad;
-    arma->set_durabilidad(nueva_durabilidad);
-    
-    if (nueva_durabilidad <= 0) {
-        cout << "¡El arma de " << nombre << " se ha roto!" << endl;
-    }
+    bool es_dano_magico = dynamic_pointer_cast<ArmaMagica>(arma) != nullptr;
+    int dano = arma->get_dano_base() + fuerza;
+    objetivo->recibir_dano(dano, es_dano_magico);
 }
 
-void Guerrero::mostrar_info() {
-    cout << "Guerrero: " << nombre << endl;
+void Guerrero::mostrar_info() const {
+    cout << "=== Información del Guerrero ===" << endl;
+    cout << "Nombre: " << nombre << endl;
     cout << "Vida: " << vida << endl;
     cout << "Resistencia Física: " << resistencia_fisica << endl;
     cout << "Resistencia Mágica: " << resistencia_magica << endl;
     cout << "Armadura: " << armadura << endl;
     cout << "Fuerza: " << fuerza << endl;
-    cout << "Arma: " << arma->get_nombre() << endl;
-    cout << "Durabilidad del arma: " << arma->get_durabilidad() << endl;
+    if (arma) {
+        cout << "\nArma equipada:" << endl;
+        arma->mostrar_info();
+    } else {
+        cout << "Sin arma equipada" << endl;
+    }
 }
 
 // Métodos específicos de Guerrero

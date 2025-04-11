@@ -1,38 +1,28 @@
 #include "../Headers/Magos.hpp"
-#include "../../Armas/Magicas/Headers/ArmaMagica.hpp"
+#include "../../../Armas/Magicas/Headers/ArmaMagica.hpp"
 #include <iostream>
-#include <random>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
 Magos::Magos(string nombre, int vida, int energia, int resistencia_fisica, int resistencia_magica, int armadura, int mana, shared_ptr<Arma> arma) : 
     nombre(nombre),
     vida(vida),
-    vida_maxima(vida),
     energia(energia),
-    energia_maxima(energia),
     resistencia_fisica(resistencia_fisica),
     resistencia_magica(resistencia_magica),
     armadura(armadura),
     mana(mana),
-    mana_maximo(mana),
     arma(arma)
 {}
 
-// Implementación de los métodos heredados de Personaje
 int Magos::get_vida() const {
     return vida;
 }
 
-int Magos::get_vida_maxima() const {
-    return vida_maxima;
-}
-
 void Magos::set_vida(int nueva_vida) {
     vida = nueva_vida;
-    if (vida > vida_maxima) {
-        vida = vida_maxima;
-    }
 }
 
 string Magos::get_nombre() const {
@@ -49,29 +39,43 @@ int Magos::get_mana() const {
 
 void Magos::set_mana(int nuevo_mana) {
     mana = nuevo_mana;
-    if (mana > mana_maximo) {
-        mana = mana_maximo;
-    }
     if (mana < 0) {
         mana = 0;
     }
 }
 
-void Magos::recibir_dano(int dano) {
-    // Los magos tienen mayor resistencia mágica
-    int reduccion_dano = armadura + (resistencia_fisica / 2) + resistencia_magica;
-    int dano_final = dano - reduccion_dano;
+void Magos::recibir_dano(int dano, bool es_dano_magico) {
+    int reduccion_fisica = armadura + resistencia_fisica;
+    int reduccion_magica = resistencia_magica * 2;
     
-    if (dano_final < 0) {
-        dano_final = 0;
+    int dano_final;
+    if (es_dano_magico) {
+        dano_final = dano - reduccion_magica;
+        if (dano_final < 0) dano_final = 0;
+        
+        auto arma_magica = dynamic_pointer_cast<ArmaMagica>(arma);
+        if (arma_magica && !arma_magica->get_esta_destruida()) {
+            int dano_magico_absorbido = dano_final * 0.2;
+            mana += dano_magico_absorbido;
+            cout << nombre << " absorbe " << dano_magico_absorbido << " puntos de daño mágico como mana!" << endl;
+            
+            dano_final -= arma_magica->get_dano_magico() / 2;
+            if (dano_final < 0) dano_final = 0;
+        }
+    } else {
+        dano_final = dano - reduccion_fisica;
+        if (dano_final < 0) dano_final = 0;
+    }
+    
+    if (dano_final == 0) {
         cout << nombre << " absorbe todo el daño con su armadura y resistencias!" << endl;
     } else {
         vida -= dano_final;
         if (vida < 0) {
             vida = 0;
-            cout << nombre << " ha recibido " << dano_final << " puntos de daño y ha caído en combate!" << endl;
+            cout << nombre << " ha recibido " << dano_final << " puntos de daño " << (es_dano_magico ? "mágico" : "físico") << " y ha caído en combate!" << endl;
         } else {
-            cout << nombre << " recibe " << dano_final << " puntos de daño!" << endl;
+            cout << nombre << " recibe " << dano_final << " puntos de daño " << (es_dano_magico ? "mágico" : "físico") << "!" << endl;
         }
     }
 }
@@ -106,7 +110,6 @@ void Magos::atacar(Personaje* objetivo) {
         return;
     }
 
-    // Intentar convertir el arma a un arma mágica
     auto arma_magica = dynamic_pointer_cast<ArmaMagica>(arma);
     if (!arma_magica) {
         cout << nombre << " solo puede usar armas mágicas!" << endl;
@@ -118,65 +121,44 @@ void Magos::atacar(Personaje* objetivo) {
         return;
     }
 
-    // Verificar mana
     if (mana < arma_magica->get_mana_requerido()) {
         cout << nombre << " no tiene suficiente mana para usar " << arma_magica->get_nombre() << endl;
         return;
     }
 
-    // Calcular probabilidad de crítico y precisión
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dis_critico(1, 100);
-    uniform_int_distribution<> dis_precision(1, 100);
-    uniform_int_distribution<> dis_accion(1, 100);
-
-    bool es_critico = dis_critico(gen) <= arma_magica->get_probabilidad_critico();
-    bool acierta = dis_precision(gen) <= arma_magica->get_precision();
-    bool decidir_curar = dis_accion(gen) <= 30 && objetivo->get_vida() < objetivo->get_vida_maxima();
-
-    if (decidir_curar) {
-        // Curar al objetivo
-        int poder_curacion = arma_magica->get_poder_curacion();
-        if (es_critico) {
-            cout << "¡CURACIÓN CRÍTICA!" << endl;
-            poder_curacion *= 2;
-        }
-
-        int vida_actual = objetivo->get_vida();
-        objetivo->set_vida(vida_actual + poder_curacion);
-        cout << nombre << " cura a " << objetivo->get_nombre() << " por " << poder_curacion << " puntos de vida!" << endl;
-    } else {
-        // Atacar al objetivo
-        if (acierta) {
-            int dano_total = arma_magica->get_dano_base() + arma_magica->get_dano_magico();
-            if (es_critico) {
-                cout << "¡CRÍTICO MÁGICO!" << endl;
-                dano_total *= 2;
-            }
-            cout << nombre << " lanza un hechizo con " << arma_magica->get_nombre() << " causando " << dano_total << " de daño!" << endl;
-            objetivo->recibir_dano(dano_total);
-        } else {
-            cout << "¡El hechizo de " << nombre << " ha fallado!" << endl;
-        }
+    bool es_critico = (rand() % 100 + 1) <= arma_magica->get_probabilidad_critico();
+    int poder_curacion = arma_magica->get_poder_curacion() + (arma_magica->get_dano_magico() / 2);
+    if (es_critico) {
+        cout << "¡CURACIÓN CRÍTICA!" << endl;
+        poder_curacion *= 2;
     }
 
-    // Consumir recursos
+    int energia_usada = 10 - (arma_magica->get_velocidad_ataque() / 10);
+    if (energia_usada < 1) energia_usada = 1;
+
+    int vida_actual = objetivo->get_vida();
+    objetivo->set_vida(vida_actual + poder_curacion);
+    cout << nombre << " cura a " << objetivo->get_nombre() << " por " << poder_curacion << " puntos de vida!" << endl;
+
     mana -= arma_magica->get_mana_requerido();
-    energia -= 10;
+    energia -= energia_usada;
     if (energia < 0) energia = 0;
 
-    // Desgastar el arma
-    int nueva_durabilidad = arma_magica->get_durabilidad() - (decidir_curar ? 3 : 5);
+    int nueva_durabilidad = arma_magica->get_durabilidad() - 3;
     arma_magica->set_durabilidad(nueva_durabilidad);
+
+    if (rand() % 100 + 1 <= 30) {
+        arma_magica->recargar_mana();
+        cout << "¡" << arma_magica->get_nombre() << " se recarga con energía mágica!" << endl;
+    }
 }
 
 void Magos::mostrar_info() const {
     cout << "=== Información del Mago ===" << endl;
     cout << "Nombre: " << nombre << endl;
-    cout << "Vida: " << vida << "/" << vida_maxima << endl;
-    cout << "Energía: " << energia << "/" << energia_maxima << endl;
-    cout << "Mana: " << mana << "/" << mana_maximo << endl;
+    cout << "Vida: " << vida << endl;
+    cout << "Energía: " << energia << endl;
+    cout << "Mana: " << mana << endl;
     cout << "Resistencia Física: " << resistencia_fisica << endl;
     cout << "Resistencia Mágica: " << resistencia_magica << endl;
     cout << "Armadura: " << armadura << endl;
@@ -193,9 +175,6 @@ void Magos::regenerar_mana() {
     
     int regeneracion = 10;
     mana += regeneracion;
-    if (mana > mana_maximo) {
-        mana = mana_maximo;
-    }
     cout << nombre << " regenera " << regeneracion << " puntos de mana." << endl;
 }
 
@@ -204,10 +183,6 @@ void Magos::meditar() {
     
     energia += 20;
     mana += 30;
-    
-    if (energia > energia_maxima) energia = energia_maxima;
-    if (mana > mana_maximo) mana = mana_maximo;
-    
     cout << nombre << " medita y recupera energía y mana." << endl;
 }
 
@@ -215,8 +190,79 @@ void Magos::recibir_curacion(int cantidad) {
     if (!esta_vivo()) return;
     
     vida += cantidad;
-    if (vida > vida_maxima) {
-        vida = vida_maxima;
-    }
     cout << nombre << " ha sido curado por " << cantidad << " puntos de vida." << endl;
+}
+
+int Magos::get_resistencia_fisica() const {
+    return resistencia_fisica;
+}
+
+void Magos::set_resistencia_fisica(int nueva_resistencia) {
+    resistencia_fisica = nueva_resistencia;
+}
+
+int Magos::get_resistencia_magica() const {
+    return resistencia_magica;
+}
+
+void Magos::set_resistencia_magica(int nueva_resistencia) {
+    resistencia_magica = nueva_resistencia;
+}
+
+int Magos::get_armadura() const {
+    return armadura;
+}
+
+void Magos::set_armadura(int nueva_armadura) {
+    armadura = nueva_armadura;
+}
+
+shared_ptr<Arma> Magos::get_arma() const {
+    return arma;
+}
+
+void Magos::set_arma(shared_ptr<Arma> nueva_arma) {
+    arma = nueva_arma;
+}
+
+void Magos::lanzar_hechizo() {
+    if (!esta_vivo()) {
+        cout << nombre << " está muerto y no puede lanzar hechizos." << endl;
+        return;
+    }
+
+    auto arma_magica = dynamic_pointer_cast<ArmaMagica>(arma);
+    if (!arma_magica) {
+        cout << nombre << " necesita un arma mágica para lanzar hechizos." << endl;
+        return;
+    }
+
+    if (mana < arma_magica->get_mana_requerido()) {
+        cout << nombre << " no tiene suficiente mana para lanzar el hechizo." << endl;
+        return;
+    }
+
+    arma_magica->lanzar_hechizo(this);
+    mana -= arma_magica->get_mana_requerido();
+    cout << nombre << " lanza un hechizo usando " << arma_magica->get_nombre() << endl;
+}
+
+void Magos::recargar_mana() {
+    if (!esta_vivo()) return;
+    
+    int recarga = 20;
+    mana += recarga;
+    cout << nombre << " recarga " << recarga << " puntos de mana." << endl;
+}
+
+void Magos::mostrar_estado() const {
+    cout << "\n=== Estado del Mago ===" << endl;
+    cout << "Nombre: " << nombre << endl;
+    cout << "Estado: " << (esta_vivo() ? "Vivo" : "Muerto") << endl;
+    cout << "Vida: " << vida << endl;
+    cout << "Energía: " << energia << endl;
+    cout << "Mana: " << mana << endl;
+    cout << "Resistencia Física: " << resistencia_fisica << endl;
+    cout << "Resistencia Mágica: " << resistencia_magica << endl;
+    cout << "Armadura: " << armadura << endl;
 }        

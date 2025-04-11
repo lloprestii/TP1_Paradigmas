@@ -19,14 +19,14 @@ class Guerrero : public Personaje {
         virtual ~Guerrero() = default;
 
         // Metodos heredados de Personaje
-        virtual int get_vida() override;
+        virtual int get_vida() const override;
         virtual void set_vida(int nueva_vida) override;
-        virtual string get_nombre() override;
+        virtual string get_nombre() const override;
         virtual void set_nombre(string nuevo_nombre) override;
-        virtual void recibir_dano(int dano) override;
-        virtual bool esta_vivo() override;
+        virtual void recibir_dano(int dano, bool es_dano_magico = false) override;
+        virtual bool esta_vivo() const override;
         virtual void atacar(Personaje* objetivo) override;
-        virtual void mostrar_info() override;
+        virtual void mostrar_info() const override;
 
         
         // Metodos específicos de Guerrero

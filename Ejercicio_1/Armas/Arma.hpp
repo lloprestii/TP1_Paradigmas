@@ -32,7 +32,6 @@ class Arma {
         
         // Métodos
         virtual void mostrar_info() = 0;
-        virtual void usar(Personaje* atacante, Personaje* objetivo) = 0;
 };
 
 

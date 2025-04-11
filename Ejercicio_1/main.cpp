@@ -1,52 +1,50 @@
 #include "Armas/Combate/Headers/ArmaCombate.hpp"
+#include "Armas/Combate/Headers/espada.hpp"
+#include "Armas/Combate/Headers/hacha_doble.hpp"
+#include "Armas/Combate/Headers/lanza.hpp"
+#include "Armas/Magicas/Headers/ArmaMagica.hpp"
+#include "Armas/Magicas/Headers/Baston.hpp"
 #include "Personajes/Guerreros/Headers/Barbaro.hpp"
 #include "Personajes/Guerreros/Headers/Caballero.hpp"
 #include "Personajes/Guerreros/Headers/Paladin.hpp"
 #include "Personajes/Guerreros/Headers/Mercenario.hpp"
 #include "Personajes/Guerreros/Headers/Gladiador.hpp"
+#include "Personajes/Magos/Headers/Magos.hpp"
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
-void probar_guerrero(shared_ptr<Guerrero> guerrero, ArmaCombate& arma) {
-    cout << "\n=== Probando " << guerrero->get_nombre() << " (" << typeid(*guerrero).name() << ") ===" << endl;
+void realizar_combate(Personaje* atacante, Personaje* defensor) {
+    cout << "\n=== " << atacante->get_nombre() << " ataca a " << defensor->get_nombre() << " ===" << endl;
     
-    // Mostrar estado inicial
-    cout << "Estado inicial del guerrero:" << endl;
-    guerrero->mostrar_info();
+    cout << "\nEstado inicial:" << endl;
+    cout << atacante->get_nombre() << ":" << endl;
+    atacante->mostrar_info();
+    cout << "\n" << defensor->get_nombre() << ":" << endl;
+    defensor->mostrar_info();
     
-    // Mostrar arma asignada
-    cout << "\nArma asignada:" << endl;
-    arma.mostrar_info();
+    atacante->atacar(defensor);
     
-    // Realizar algunas acciones
-    cout << "\nRealizando acciones..." << endl;
-    
-    // Crear un objetivo de prueba
-    auto objetivo = make_shared<Barbaro>("Objetivo de prueba");
-    guerrero->atacar(objetivo.get());
-    
-    cout << "\nRecibiendo daño..." << endl;
-    guerrero->recibir_dano(20);
-    
-    // Probar el arma
-    cout << "\nProbando el arma..." << endl;
-    arma.bloquear();
-    arma.afilar();
-    arma.mostrar_estado();
-    
-    // Mostrar estado final
-    cout << "\nEstado final del guerrero:" << endl;
-    guerrero->mostrar_info();
+    cout << "\nEstado después del ataque:" << endl;
+    cout << atacante->get_nombre() << ":" << endl;
+    atacante->mostrar_info();
+    cout << "\n" << defensor->get_nombre() << ":" << endl;
+    defensor->mostrar_info();
 }
 
 int main() {
+    // Inicializar la semilla de rand()
+    srand(time(nullptr));
+
     // Crear armas de prueba
-    ArmaCombate espada("Espada Larga", 50, 100, 75, 85, 2, 30, true, 15, 20, false);
-    ArmaCombate hacha("Hacha de Guerra", 70, 90, 60, 75, 1, 40, true, 20, 25, false);
-    ArmaCombate lanza("Lanza de Caballería", 45, 95, 80, 90, 3, 25, false, 10, 15, false);
+    Espada espada("Espada Larga", 50, 100);
+    HachaDoble hacha("Hacha de Guerra", 70, 90);
+    Lanza lanza("Lanza de Caballería", 45, 95);
+    Baston baston("Bastón del Arcano", 30, 100);
     
     // Crear guerreros
     vector<shared_ptr<Guerrero>> guerreros;
@@ -56,39 +54,44 @@ int main() {
     guerreros.push_back(make_shared<Mercenario>("Drake"));
     guerreros.push_back(make_shared<Gladiador>("Spartacus"));
     
-    // Probar cada guerrero con un arma diferente
-    cout << "=== Iniciando pruebas de guerreros ===" << endl;
-    probar_guerrero(guerreros[0], espada);  // Bárbaro con espada
-    probar_guerrero(guerreros[1], lanza);   // Caballero con lanza
-    probar_guerrero(guerreros[2], hacha);   // Paladín con hacha
-    probar_guerrero(guerreros[3], espada);  // Mercenario con espada
-    probar_guerrero(guerreros[4], hacha);   // Gladiador con hacha
+    // Crear magos
+    vector<shared_ptr<Magos>> magos;
+    magos.push_back(make_shared<Magos>("Merlín", 100, 100, 20, 50, 10, 150, make_shared<Baston>(baston)));
+    magos.push_back(make_shared<Magos>("Gandalf", 120, 100, 25, 60, 15, 200, make_shared<Baston>(baston)));
     
-    // Probar interacción entre guerreros
-    cout << "\n=== Probando combate entre guerreros ===" << endl;
-    auto barbaro = guerreros[0];
-    auto caballero = guerreros[1];
+    // Asignar armas a los guerreros
+    guerreros[0]->set_arma(make_shared<Espada>(espada));  // Bárbaro con espada
+    guerreros[1]->set_arma(make_shared<Lanza>(lanza));    // Caballero con lanza
+    guerreros[2]->set_arma(make_shared<HachaDoble>(hacha)); // Paladín con hacha
+    guerreros[3]->set_arma(make_shared<Espada>(espada));  // Mercenario con espada
+    guerreros[4]->set_arma(make_shared<HachaDoble>(hacha)); // Gladiador con hacha
     
-    cout << "\nCombate entre " << barbaro->get_nombre() << " y " << caballero->get_nombre() << ":" << endl;
+    // Crear vector de todos los personajes
+    vector<Personaje*> todos_los_personajes;
+    for (const auto& guerrero : guerreros) {
+        todos_los_personajes.push_back(guerrero.get());
+    }
+    for (const auto& mago : magos) {
+        todos_los_personajes.push_back(mago.get());
+    }
     
-    // Mostrar estados iniciales
-    cout << "\nEstados iniciales:" << endl;
-    cout << barbaro->get_nombre() << ":" << endl;
-    barbaro->mostrar_info();
-    cout << "\n" << caballero->get_nombre() << ":" << endl;
-    caballero->mostrar_info();
+    // Realizar combates entre todos los personajes
+    cout << "=== Iniciando torneo de combate ===" << endl;
     
-    // Realizar el combate
-    cout << "\nRealizando combate..." << endl;
-    barbaro->atacar(caballero.get());
-    caballero->atacar(barbaro.get());
+    for (size_t i = 0; i < todos_los_personajes.size(); ++i) {
+        for (size_t j = 0; j < todos_los_personajes.size(); ++j) {
+            if (i != j && todos_los_personajes[i]->esta_vivo() && todos_los_personajes[j]->esta_vivo()) {
+                realizar_combate(todos_los_personajes[i], todos_los_personajes[j]);
+            }
+        }
+    }
     
-    // Mostrar estados finales
-    cout << "\nEstados finales después del combate:" << endl;
-    cout << "\n" << barbaro->get_nombre() << ":" << endl;
-    barbaro->mostrar_info();
-    cout << "\n" << caballero->get_nombre() << ":" << endl;
-    caballero->mostrar_info();
+    // Mostrar resultados finales
+    cout << "\n=== Resultados finales del torneo ===" << endl;
+    for (const auto& personaje : todos_los_personajes) {
+        cout << "\n" << personaje->get_nombre() << ":" << endl;
+        personaje->mostrar_info();
+    }
     
     return 0;
 } 

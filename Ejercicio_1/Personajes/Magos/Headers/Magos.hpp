@@ -19,14 +19,14 @@ class Magos : public Personaje{
         virtual ~Magos() = default;
 
         // Metodos heredados de Personaje
-        virtual int get_vida() override;
+        virtual int get_vida() const override;
         virtual void set_vida(int nueva_vida) override;
-        virtual string get_nombre() override;
+        virtual string get_nombre() const override;
         virtual void set_nombre(string nuevo_nombre) override;
-        virtual void recibir_dano(int dano) override;
-        virtual bool esta_vivo() override;
+        virtual void recibir_dano(int dano, bool es_dano_magico = false) override;
+        virtual bool esta_vivo() const override;
         virtual void atacar(Personaje* objetivo) override;
-        virtual void mostrar_info() override;
+        virtual void mostrar_info() const override;
 
         // Metodos específicos de Magos
         virtual int get_resistencia_fisica() const;
@@ -41,8 +41,10 @@ class Magos : public Personaje{
         virtual void set_arma(shared_ptr<Arma> nueva_arma);
         virtual void lanzar_hechizo();
         virtual void recargar_mana();
-        virtual void mostrar_info() override;
-        virtual void mostrar_estado();
+        virtual void mostrar_estado() const;
+        virtual void regenerar_mana();
+        virtual void meditar();
+        virtual void recibir_curacion(int cantidad);
 };
 
         
