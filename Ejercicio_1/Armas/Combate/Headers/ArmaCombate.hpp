@@ -43,6 +43,7 @@ class ArmaCombate : public Arma {
         void set_probabilidad_critico(int probabilidad_critico);
         void set_costo_energia(int costo_energia);
         void set_esta_destruida(bool esta_destruida);
+        void set_durabilidad(int nueva_durabilidad) override;
 
         // Métodos heredados de Arma
         string get_nombre() override;
@@ -51,7 +52,6 @@ class ArmaCombate : public Arma {
         int get_velocidad_ataque() override;
         int get_precision() override;
         void mostrar_info() override;
-        void usar(Personaje* personaje) override;
 
         // Métodos propios de la clase
         void bloquear();

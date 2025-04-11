@@ -68,9 +68,12 @@ void ArmaCombate::set_esta_destruida(bool esta_destruida) {
     this->esta_destruida = esta_destruida;
 }
 
-void ArmaCombate::usar(Personaje* personaje) {
-    cout << "Usando arma de combate..." << endl;
-    // Acordarse de incluir que el hacha doble golpea dos veces
+void ArmaCombate::set_durabilidad(int nueva_durabilidad) {
+    durabilidad = nueva_durabilidad;
+    if (durabilidad <= 0) {
+        esta_destruida = true;
+        durabilidad = 0;
+    }
 }
 
 void ArmaCombate::mostrar_info() {
@@ -133,6 +136,26 @@ bool ArmaCombate::lanzar_arma() {
     durabilidad = 0;
     cout << "El arma se ha destruido y no puede ser reparada." << endl;
     return true;
+}
+
+void ArmaCombate::set_alcance(int alcance) {
+    this->alcance = alcance;
+}
+
+void ArmaCombate::set_dano_cortante(int dano_cortante) {
+    this->dano_cortante = dano_cortante;
+}
+
+void ArmaCombate::set_es_doble_mano(bool es_doble_mano) {
+    this->es_doble_mano = es_doble_mano;
+}
+
+void ArmaCombate::set_probabilidad_critico(int probabilidad_critico) {
+    this->probabilidad_critico = probabilidad_critico;
+}
+
+void ArmaCombate::set_costo_energia(int costo_energia) {
+    this->costo_energia = costo_energia;
 }
 
 

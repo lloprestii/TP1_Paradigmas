@@ -12,6 +12,7 @@ class Arma {
         int durabilidad;
         int velocidad_ataque;
         int precision;
+        int probabilidad_critico;
 
     public:
         Arma() = default;
@@ -23,10 +24,13 @@ class Arma {
         virtual int get_durabilidad() = 0;
         virtual int get_velocidad_ataque() = 0;
         virtual int get_precision() = 0;
+        virtual int get_probabilidad_critico() = 0;
+        
+        // Setters
+        virtual void set_durabilidad(int nueva_durabilidad) = 0;
         
         // Metodos
         virtual void mostrar_info() = 0;
-        virtual void usar(Personaje* personaje) = 0;
 };
 
 
