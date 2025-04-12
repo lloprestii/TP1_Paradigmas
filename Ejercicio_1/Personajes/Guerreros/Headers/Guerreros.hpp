@@ -18,7 +18,6 @@ class Guerrero : public Personaje {
         Guerrero(string nombre, int vida, int resistencia_fisica, int resistencia_magica, int armadura, int fuerza, shared_ptr<Arma> arma);
         virtual ~Guerrero() = default;
 
-        // Metodos heredados de Personaje
         virtual int get_vida() const override;
         virtual void set_vida(int nueva_vida) override;
         virtual string get_nombre() const override;

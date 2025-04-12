@@ -3,4 +3,5 @@
 class Baston : public ArmaMagica {
     public:
         Baston(string nombre, int dano_base, int durabilidad);
+        void atacar() const override;
 };

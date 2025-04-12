@@ -28,7 +28,6 @@ class Magos : public Personaje{
         virtual void atacar(Personaje* objetivo) override;
         virtual void mostrar_info() const override;
 
-        // Metodos específicos de Magos
         virtual int get_resistencia_fisica() const;
         virtual void set_resistencia_fisica(int nueva_resistencia);
         virtual int get_resistencia_magica() const;

@@ -20,7 +20,6 @@ ArmaCombate::ArmaCombate(const string& nombre, int dano_base, int durabilidad, i
     esta_destruida(esta_destruida)
 {}
 
-// Implementación de los métodos virtuales puros de Arma
 string ArmaCombate::get_nombre() const {
     return nombre;
 }
@@ -49,7 +48,6 @@ bool ArmaCombate::get_esta_destruida() const {
     return esta_destruida;
 }
 
-// Implementación de getters adicionales
 int ArmaCombate::get_alcance() const {
     return alcance;
 }
@@ -66,7 +64,6 @@ int ArmaCombate::get_costo_energia() const {
     return costo_energia;
 }
 
-// Implementación de setters
 void ArmaCombate::set_durabilidad(int nueva_durabilidad) {
     durabilidad = nueva_durabilidad;
     if (durabilidad <= 0) {
@@ -95,7 +92,6 @@ void ArmaCombate::set_costo_energia(int costo_energia) {
     this->costo_energia = costo_energia;
 }
 
-// Implementación de métodos heredados
 void ArmaCombate::mostrar_info() {
     cout << "=== Información del Arma de Combate ===" << endl;
     cout << "Nombre: " << nombre << endl;
@@ -134,13 +130,6 @@ void ArmaCombate::reparar() {
     cout << "Durabilidad restante: " << durabilidad << endl;
 }
 
-void ArmaCombate::afilar() {
-    cout << "Afilando el arma..." << endl;
-    dano_base += 10;
-    if(dano_base > 100) {
-        dano_base = 100;
-    }
-}
 
 void ArmaCombate::mostrar_estado() {
     cout << "=== Estado del Arma de Combate ===" << endl;
