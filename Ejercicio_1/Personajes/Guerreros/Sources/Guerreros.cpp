@@ -1,16 +1,16 @@
 #include "../Headers/Guerreros.hpp"
-#include "../../../Armas/Magicas/Headers/ArmaMagica.hpp"
 #include <iostream>
-#include <random>
-#include <ctime>
 
 using namespace std;
 
-Guerrero::Guerrero(string nombre, int vida, int resistencia_fisica, int resistencia_magica, int armadura, int fuerza, shared_ptr<Arma> arma)
-    : nombre(nombre), vida(vida), resistencia_fisica(resistencia_fisica),
-      resistencia_magica(resistencia_magica), armadura(armadura), fuerza(fuerza), arma(arma) {}
+Guerrero::Guerrero(string nombre, int vida, int fuerza, int armadura, shared_ptr<Arma> arma) :
+    nombre(nombre),
+    vida(vida),
+    fuerza(fuerza),
+    armadura(armadura),
+    arma(arma)
+{}
 
-// Métodos heredados de Personaje
 int Guerrero::get_vida() const {
     return vida;
 }
@@ -28,107 +28,43 @@ void Guerrero::set_nombre(string nuevo_nombre) {
 }
 
 void Guerrero::recibir_dano(int dano, bool es_dano_magico) {
-    int reduccion_dano;
-    if (es_dano_magico) {
-        reduccion_dano = (resistencia_magica / 2);
-    } else {
-        reduccion_dano = armadura + (resistencia_fisica / 2);
-    }
-    
-    int dano_final = dano - reduccion_dano;
-    
-    if (dano_final < 0) {
-        dano_final = 0;
-        cout << nombre << " bloquea todo el daño con su armadura y resistencia!" << endl;
-    } else {
-        cout << nombre << " recibe " << dano_final << " puntos de daño " << (es_dano_magico ? "mágico" : "físico") << "!" << endl;
-    }
+    int dano_final = dano - armadura;
+    if (dano_final < 0) dano_final = 0;
     
     vida -= dano_final;
+    if (vida < 0) vida = 0;
     
-    if (vida <= 0) {
-        vida = 0;
-        cout << nombre << " ha caído en combate!" << endl;
-    }
+    cout << nombre << " recibe " << dano_final << " puntos de daño." << endl;
 }
 
 bool Guerrero::esta_vivo() const {
     return vida > 0;
 }
 
-void Guerrero::atacar(Personaje* objetivo) {
+void Guerrero::atacar(Personaje* atacante, Personaje* objetivo) {
     if (!esta_vivo()) {
-        cout << nombre << " está muerto y no puede atacar." << endl;
+        cout << nombre << " no puede atacar porque está muerto." << endl;
         return;
     }
-
+    
     if (!objetivo) {
-        cout << "No hay objetivo válido para atacar." << endl;
+        cout << "No hay objetivo para atacar." << endl;
         return;
     }
 
-    if (!objetivo->esta_vivo()) {
-        cout << "El objetivo ya está muerto." << endl;
-        return;
-    }
-
-    if (!arma) {
-        cout << nombre << " no tiene un arma equipada." << endl;
-        return;
-    }
-
-    bool es_dano_magico = dynamic_pointer_cast<ArmaMagica>(arma) != nullptr;
-    int dano = arma->get_dano_base() + fuerza;
-    objetivo->recibir_dano(dano, es_dano_magico);
-}
-
-void Guerrero::mostrar_info() const {
-    cout << "=== Información del Guerrero ===" << endl;
-    cout << "Nombre: " << nombre << endl;
-    cout << "Vida: " << vida << endl;
-    cout << "Resistencia Física: " << resistencia_fisica << endl;
-    cout << "Resistencia Mágica: " << resistencia_magica << endl;
-    cout << "Armadura: " << armadura << endl;
-    cout << "Fuerza: " << fuerza << endl;
-    if (arma) {
-        cout << "\nArma equipada:" << endl;
-        arma->mostrar_info();
+    if (rand() % 100 < atacante->get_arma()->get_precision()) {
+        int dano_base = fuerza + arma->get_dano_base();
+        
+        if (rand() % 100 < atacante->get_arma()->get_probabilidad_critico()) {
+            dano_base *= 2;
+            cout << atacante->get_nombre() << " realiza un golpe crítico!" << endl;
+        }
+        
+        cout << atacante->get_nombre() << " ataca con " << dano_base << " puntos de daño." << endl;
+        objetivo->recibir_dano(dano_base);
     } else {
-        cout << "Sin arma equipada" << endl;
+        cout << atacante->get_nombre() << " falla el ataque!" << endl;
     }
-}
-
-// Métodos específicos de Guerrero
-int Guerrero::get_resistencia_fisica() const {
-    return resistencia_fisica;
-}
-
-void Guerrero::set_resistencia_fisica(int nueva_resistencia) {
-    resistencia_fisica = nueva_resistencia;
-}
-
-int Guerrero::get_resistencia_magica() const {
-    return resistencia_magica;
-}
-
-void Guerrero::set_resistencia_magica(int nueva_resistencia) {
-    resistencia_magica = nueva_resistencia;
-}
-
-int Guerrero::get_armadura() const {
-    return armadura;
-}
-
-void Guerrero::set_armadura(int nueva_armadura) {
-    armadura = nueva_armadura;
-}
-
-int Guerrero::get_fuerza() const {
-    return fuerza;
-}
-
-void Guerrero::set_fuerza(int nueva_fuerza) {
-    fuerza = nueva_fuerza;
 }
 
 shared_ptr<Arma> Guerrero::get_arma() const {

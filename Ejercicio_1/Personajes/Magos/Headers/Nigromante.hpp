@@ -4,4 +4,5 @@
 class Nigromante : public Magos {
     public:
         Nigromante(string nombre);
+        void mostrar_info() const override;
 };

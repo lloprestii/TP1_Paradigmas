@@ -13,17 +13,14 @@ class ArmaCombate : public Arma {
         int durabilidad;
         int velocidad_ataque;
         int precision;
-        int alcance;
-        int dano_cortante;
-        bool es_doble_mano;
         int probabilidad_critico;
-        int costo_energia;
-        bool esta_destruida;
         
     public:
-        ArmaCombate(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int alcance, int dano_cortante, bool es_doble_mano, int probabilidad_critico, int costo_energia, bool esta_destruida);
-        ~ArmaCombate() = default;
+        // Constructor protegido
+        ArmaCombate(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int probabilidad_critico);
+        virtual ~ArmaCombate() = default;
 
+        // Getters y Setters
         string get_nombre() const override;
         int get_dano_base() const override;
         int get_durabilidad() const override;
@@ -31,26 +28,12 @@ class ArmaCombate : public Arma {
         int get_precision() const override;
         int get_probabilidad_critico() const override;
         bool get_esta_destruida() const override;
-        
-        int get_alcance() const;
-        int get_dano_cortante() const;
-        bool get_es_doble_mano() const;
-        int get_costo_energia() const;
-
-        void set_alcance(int alcance);
-        void set_dano_cortante(int dano_cortante);
-        void set_es_doble_mano(bool es_doble_mano);
-        void set_probabilidad_critico(int probabilidad_critico);
-        void set_costo_energia(int costo_energia);
         void set_durabilidad(int nueva_durabilidad) override;
 
-        void mostrar_info() override;
+        // Métodos de información
+        void mostrar_info() const override;
 
-        void bloquear();
-        void afilar();
-        void mostrar_estado();
-        bool lanzar_arma();
-        void reparar();
+        // Método virtual puro
         virtual void atacar() const override = 0;
 };
 

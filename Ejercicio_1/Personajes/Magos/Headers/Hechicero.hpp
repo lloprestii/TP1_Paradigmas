@@ -4,4 +4,5 @@
 class Hechicero : public Magos {
     public:
         Hechicero(string nombre);
+        void mostrar_info() const override;
 };
