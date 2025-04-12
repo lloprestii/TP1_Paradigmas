@@ -4,7 +4,7 @@
 using namespace std;
 
 Baston::Baston(string nombre, int dano_base, int durabilidad)
-    : ArmaMagica(nombre, dano_base, durabilidad, 6, 90) 
+    : ArmaMagica(nombre, dano_base, durabilidad, 6, 90, 25)
     {}
 
 void Baston::atacar() const{

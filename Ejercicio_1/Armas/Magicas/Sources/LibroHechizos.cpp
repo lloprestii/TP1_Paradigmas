@@ -4,7 +4,7 @@
 using namespace std;
 
 LibroHechizos::LibroHechizos(string nombre, int dano_base, int durabilidad)
-    : ArmaMagica(nombre, dano_base, durabilidad, 2, 80)
+    : ArmaMagica(nombre, dano_base, durabilidad, 2, 80, 40)
     {}
 
 void LibroHechizos::atacar() const{

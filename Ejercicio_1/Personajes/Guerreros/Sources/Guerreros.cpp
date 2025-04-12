@@ -27,7 +27,7 @@ void Guerrero::set_nombre(string nuevo_nombre) {
     nombre = nuevo_nombre;
 }
 
-void Guerrero::recibir_dano(int dano, bool es_dano_magico) {
+void Guerrero::recibir_dano(int dano) {
     int dano_final = dano - armadura;
     if (dano_final < 0) dano_final = 0;
     
@@ -41,9 +41,9 @@ bool Guerrero::esta_vivo() const {
     return vida > 0;
 }
 
-void Guerrero::atacar(Personaje* atacante, Personaje* objetivo) {
+void Guerrero::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetivo) {
     if (!esta_vivo()) {
-        cout << nombre << " no puede atacar porque está muerto." << endl;
+        cout << nombre << " no puede atacar porque esta muerto." << endl;
         return;
     }
     
@@ -57,7 +57,7 @@ void Guerrero::atacar(Personaje* atacante, Personaje* objetivo) {
         
         if (rand() % 100 < atacante->get_arma()->get_probabilidad_critico()) {
             dano_base *= 2;
-            cout << atacante->get_nombre() << " realiza un golpe crítico!" << endl;
+            cout << atacante->get_nombre() << " realiza un golpe critico!" << endl;
         }
         
         cout << atacante->get_nombre() << " ataca con " << dano_base << " puntos de daño." << endl;
@@ -70,7 +70,6 @@ void Guerrero::atacar(Personaje* atacante, Personaje* objetivo) {
 shared_ptr<Arma> Guerrero::get_arma() const {
     return arma;
 }
-
 void Guerrero::set_arma(shared_ptr<Arma> nueva_arma) {
     arma = nueva_arma;
 }

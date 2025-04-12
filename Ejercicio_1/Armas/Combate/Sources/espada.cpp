@@ -4,7 +4,7 @@
 using namespace std;
 
 Espada::Espada(const string& nombre, int dano_base, int durabilidad) 
-    : ArmaCombate(nombre, dano_base, durabilidad, 8, 85) 
+    : ArmaCombate(nombre, dano_base, durabilidad, 8, 85, 20) 
     {} 
 
 void Espada::atacar() const{

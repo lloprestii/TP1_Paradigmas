@@ -11,4 +11,5 @@ void Gladiador::mostrar_info() const {
     cout << "Vida: " << vida << endl;
     cout << "Fuerza: " << fuerza << endl;
     cout << "Armadura: " << armadura << endl;
+    cout << "Arma: " << arma->get_nombre() << endl;
 }

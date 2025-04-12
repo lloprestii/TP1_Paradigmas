@@ -16,11 +16,9 @@ class ArmaCombate : public Arma {
         int probabilidad_critico;
         
     public:
-        // Constructor protegido
         ArmaCombate(const string& nombre, int dano_base, int durabilidad, int velocidad_ataque, int precision, int probabilidad_critico);
         virtual ~ArmaCombate() = default;
 
-        // Getters y Setters
         string get_nombre() const override;
         int get_dano_base() const override;
         int get_durabilidad() const override;
@@ -30,10 +28,8 @@ class ArmaCombate : public Arma {
         bool get_esta_destruida() const override;
         void set_durabilidad(int nueva_durabilidad) override;
 
-        // Métodos de información
         void mostrar_info() const override;
 
-        // Método virtual puro
         virtual void atacar() const override = 0;
 };
 

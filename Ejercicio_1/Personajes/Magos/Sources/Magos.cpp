@@ -27,7 +27,7 @@ void Magos::set_nombre(string nuevo_nombre) {
     nombre = nuevo_nombre;
 }
 
-void Magos::recibir_dano(int dano, bool es_dano_magico) {
+void Magos::recibir_dano(int dano) {
     int dano_final = dano - armadura;
     if (dano_final < 0) dano_final = 0;
     
@@ -41,7 +41,7 @@ bool Magos::esta_vivo() const {
     return vida > 0;
 }
 
-void Magos::atacar(Personaje* atacante, Personaje* objetivo) {
+void Magos::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetivo) {
     if (!esta_vivo()) {
         cout << nombre << " no puede atacar porque esta muerto." << endl;
         return;
@@ -61,7 +61,7 @@ void Magos::atacar(Personaje* atacante, Personaje* objetivo) {
         }
         
         cout << atacante->get_nombre() << " lanza un ataque con " << dano_base << " puntos de daño." << endl;
-        objetivo->recibir_dano(dano_base, true);
+        objetivo->recibir_dano(dano_base);
     } else {
         cout << atacante->get_nombre() << " falla el ataque!" << endl;
     }
@@ -70,7 +70,6 @@ void Magos::atacar(Personaje* atacante, Personaje* objetivo) {
 shared_ptr<Arma> Magos::get_arma() const {
     return arma;
 }
-
 void Magos::set_arma(shared_ptr<Arma> nueva_arma) {
     arma = nueva_arma;
 }

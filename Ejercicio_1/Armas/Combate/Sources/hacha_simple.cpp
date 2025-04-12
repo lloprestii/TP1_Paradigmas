@@ -4,7 +4,7 @@
 using namespace std;
 
 HachaSimple::HachaSimple(string nombre, int dano_base, int durabilidad) 
-    : ArmaCombate(nombre, dano_base, durabilidad, 6, 70) 
+    : ArmaCombate(nombre, dano_base, durabilidad, 6, 70, 15) 
     {} 
 
 void HachaSimple::atacar() const{

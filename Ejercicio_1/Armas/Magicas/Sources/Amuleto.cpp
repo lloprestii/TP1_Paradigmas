@@ -4,7 +4,7 @@
 using namespace std;
 
 Amuleto::Amuleto(string nombre, int dano_base, int durabilidad)
-    : ArmaMagica(nombre, dano_base, durabilidad, 4, 95)
+    : ArmaMagica(nombre, dano_base, durabilidad, 4, 95, 35)
     {}
 
 void Amuleto::atacar() const{
