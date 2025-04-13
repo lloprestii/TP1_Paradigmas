@@ -25,9 +25,6 @@
 #include "../Ejercicio_1/Armas/Magicas/Headers/Pocion.hpp"
 #include "../Ejercicio_1/Armas/Magicas/Headers/Baston.hpp"
 
-
-
-
 using namespace std;
 
 enum class Personajes{

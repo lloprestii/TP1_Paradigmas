@@ -6,10 +6,7 @@
 
 using namespace std;
 
-
-
-
-int numero_aleatorio(int min, int max){
+int numero_aleatorio(int min, int max){ 
     return min + rand() % (max - min + 1);
 }
 
