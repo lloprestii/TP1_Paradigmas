@@ -2,8 +2,8 @@
 #include "../../../Armas/Combate/Headers/hacha_doble.hpp"
 #include <memory>
 
-Barbaro::Barbaro(string nombre)
-    : Guerrero(nombre, 120, 90, 20, make_shared<HachaDoble>("Hacha Doble", 35, 60))
+Barbaro::Barbaro(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
+    : Guerrero(nombre, 120, 90, 20, armas)
 {}
 
 void Barbaro::mostrar_info() const {
@@ -12,5 +12,6 @@ void Barbaro::mostrar_info() const {
     cout << "Vida: " << vida << endl;
     cout << "Fuerza: " << fuerza << endl;
     cout << "Armadura: " << armadura << endl;
-    cout << "Arma: " << arma->get_nombre() << endl;
+    cout << "Arma 1: " << (armas.first ? armas.first->get_nombre() : "Ninguna") << endl;
+    cout << "Arma 2: " << (armas.second ? armas.second->get_nombre() : "Ninguna") << endl;
 }

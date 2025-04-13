@@ -11,8 +11,8 @@ int main() {
     auto espada = make_shared<Espada>("Espada de Acero", 15, 100);
     auto hacha = make_shared<HachaDoble>("Hacha de Guerra", 20, 90);
     
-    auto barbaro = make_shared<Barbaro>("Grom");
-    auto caballero = make_shared<Caballero>("Arthur");
+    auto barbaro = make_shared<Barbaro>("Grom", make_pair(espada, hacha));
+    auto caballero = make_shared<Caballero>("Arthur", make_pair(espada, hacha));
     
     cout << "=== Estado Inicial ===" << endl;
     cout << "BARBARO:" << endl;

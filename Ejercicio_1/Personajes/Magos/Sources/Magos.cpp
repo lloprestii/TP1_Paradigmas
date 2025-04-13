@@ -3,12 +3,12 @@
 
 using namespace std;
 
-Magos::Magos(string nombre, int vida, int mana, int armadura, shared_ptr<Arma> arma) :
+Magos::Magos(string nombre, int vida, int mana, int armadura, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas) :
     nombre(nombre),
     vida(vida),
     mana(mana),
     armadura(armadura),
-    arma(arma)
+    armas(armas)
 {}
 
 int Magos::get_vida() const {
@@ -52,10 +52,10 @@ void Magos::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetiv
         return;
     }
 
-    if (rand() % 100 < atacante->get_arma()->get_precision()) {
-        int dano_base = atacante->get_arma()->get_dano_base();
+    if (rand() % 100 < atacante->get_armas().first->get_precision()) {
+        int dano_base = atacante->get_armas().first->get_dano_base();
         
-        if (rand() % 100 < atacante->get_arma()->get_probabilidad_critico()) {
+        if (rand() % 100 < atacante->get_armas().first->get_probabilidad_critico()) {
             dano_base *= 2;
             cout << atacante->get_nombre() << " realiza un ataque critico!" << endl;
         }
@@ -67,9 +67,10 @@ void Magos::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetiv
     }
 }
 
-shared_ptr<Arma> Magos::get_arma() const {
-    return arma;
+pair<shared_ptr<Arma>, shared_ptr<Arma>> Magos::get_armas() const {
+    return armas;
 }
-void Magos::set_arma(shared_ptr<Arma> nueva_arma) {
-    arma = nueva_arma;
+
+void Magos::set_armas(pair<shared_ptr<Arma>, shared_ptr<Arma>> nuevas_armas) {
+    armas = nuevas_armas;
 }

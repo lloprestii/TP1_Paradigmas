@@ -1,8 +1,8 @@
 #include "../Headers/Paladin.hpp"
 #include "../../../Armas/Combate/Headers/garrote.hpp"
 
-Paladin::Paladin(string nombre)
-    : Guerrero(nombre, 105, 55, 60, make_shared<Garrote>("Garrote", 18, 90))
+Paladin::Paladin(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
+    : Guerrero(nombre, 105, 55, 60, armas)
 {}
 
 void Paladin::mostrar_info() const {
@@ -11,5 +11,6 @@ void Paladin::mostrar_info() const {
     cout << "Vida: " << vida << endl;
     cout << "Fuerza: " << fuerza << endl;
     cout << "Armadura: " << armadura << endl;
-    cout << "Arma: " << arma->get_nombre() << endl;
+    cout << "Arma 1: " << (armas.first ? armas.first->get_nombre() : "Ninguna") << endl;
+    cout << "Arma 2: " << (armas.second ? armas.second->get_nombre() : "Ninguna") << endl;
 }
