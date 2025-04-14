@@ -26,6 +26,7 @@ class Magos : public Personaje {
         void recibir_dano(int dano) override;
         bool esta_vivo() const override;
         void atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetivo) override;
+        void set_armadura(int nueva_armadura) override;
         void mostrar_info() const override = 0;
 };
 

@@ -41,6 +41,10 @@ bool Guerrero::esta_vivo() const {
     return vida > 0;
 }
 
+void Guerrero::set_armadura(int nueva_armadura){
+    armadura = nueva_armadura;
+}
+
 void Guerrero::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetivo) {
     if (!esta_vivo()) {
         cout << nombre << " no puede atacar porque esta muerto." << endl;

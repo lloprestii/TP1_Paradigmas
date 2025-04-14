@@ -27,6 +27,10 @@ void Magos::set_nombre(string nuevo_nombre) {
     nombre = nuevo_nombre;
 }
 
+void Magos::set_armadura(int nueva_armadura){
+    armadura = nueva_armadura;
+}
+
 void Magos::recibir_dano(int dano) {
     int dano_final = dano - armadura;
     if (dano_final < 0) dano_final = 0;

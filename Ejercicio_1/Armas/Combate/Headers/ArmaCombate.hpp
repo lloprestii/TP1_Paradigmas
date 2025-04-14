@@ -27,9 +27,7 @@ class ArmaCombate : public Arma {
         int get_probabilidad_critico() const override;
         bool get_esta_destruida() const override;
         void set_durabilidad(int nueva_durabilidad) override;
-
         void mostrar_info() const override;
-
         virtual void atacar() const override = 0;
 };
 

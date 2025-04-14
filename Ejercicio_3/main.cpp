@@ -7,16 +7,13 @@
 #include "../Ejercicio_2/Factory.hpp"
 #include "../Ejercicio_1/Personajes/Personaje.hpp"
 #include "../Ejercicio_1/Armas/Arma.hpp"
+#include "auxiliares.hpp"
 
 using namespace std;
 
-int numero_aleatorio(int min, int max){ 
-    return min + rand() % (max - min + 1);
-}
-
 int main(){
     system("clear");
-    srand(time(NULL)); // Inicializar la semilla para números aleatorios
+    srand(time(0));
     int opcion;
     while(true){
         cout << "Seleccione un tipo de personaje:" << endl;
@@ -35,7 +32,7 @@ int main(){
             break;
         }
         shared_ptr<Personaje> Personaje1 = PersonajeFactory::personaje_desarmado(static_cast<Personajes>(opcion));
-        cout << "Has seleccionado el personaje " << Personaje1->get_nombre() << endl;
+        system("clear");
         cout << "Seleccione un tipo de arma:" << endl;
         cout << "0. Espada" << endl;
         cout << "1. Hacha Simple" << endl;
@@ -53,15 +50,30 @@ int main(){
         }
         shared_ptr<Arma> armaSeleccionada = PersonajeFactory::crear_arma(static_cast<Armas>(opcion));
         Personaje1->set_armas(make_pair(armaSeleccionada, nullptr));
-        Personaje1->mostrar_info();
 
-        // Crear un personaje aleatorio con un arma aleatoria
         shared_ptr<Arma> armaAleatoria = PersonajeFactory::crear_arma(static_cast<Armas>(numero_aleatorio(0, 8)));
-        shared_ptr<Personaje> Personaje2 = PersonajeFactory::personaje_armado(
-            static_cast<Personajes>(numero_aleatorio(0, 8)),
-            make_pair(armaAleatoria, nullptr)
-        );
-        Personaje2->mostrar_info();
+        shared_ptr<Personaje> Personaje2 = PersonajeFactory::personaje_armado(static_cast<Personajes>(numero_aleatorio(0, 8)),make_pair(armaAleatoria, nullptr));
+
+        Personaje1->set_armadura(0);
+        Personaje2->set_armadura(0);
+        Personaje1->set_vida(100);
+        Personaje2->set_vida(100);
+
+        while(Personaje1->esta_vivo() && Personaje2->esta_vivo()){
+            cout << "El jugador 1 tiene " << Personaje1->get_vida() << " HP y el jugador 2 tiene " << Personaje2->get_vida() << " HP." << endl;
+            cout << "Su opcion: (1)Golpe Fuerte, (2)Golpe Rapido, (3)Defensa y Golpe: ";
+            cin >> opcion;
+            Golpes golpeAleatorio = static_cast<Golpes>(numero_aleatorio(0, 2));
+            Resultado(Personaje1, Personaje2, opcion, golpeAleatorio);
+            cout << endl;
+        }
+        system("clear");
+        if (Personaje1->get_vida() == 0){
+            cout << "El jugador 2 gano el juego!" << endl;
+        }
+        else{
+            cout << "El jugador 1 gano el juego!" << endl;
+        }
         return 0;
     }
 }
