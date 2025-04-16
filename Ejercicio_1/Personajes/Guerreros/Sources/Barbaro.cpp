@@ -1,9 +1,8 @@
 #include "../Headers/Barbaro.hpp"
-#include "../../../Armas/Combate/Headers/hacha_doble.hpp"
 #include <memory>
 
-Barbaro::Barbaro(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Guerrero(nombre, 120, 90, 20, armas)
+Barbaro::Barbaro(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Guerrero(nombre, 120, 90, 20, move(armas))
 {}
 
 void Barbaro::mostrar_info() const {

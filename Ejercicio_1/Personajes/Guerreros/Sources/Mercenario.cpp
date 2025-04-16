@@ -1,8 +1,7 @@
 #include "../Headers/Mercenario.hpp"
-#include "../../../Armas/Combate/Headers/hacha_simple.hpp"
 
-Mercenario::Mercenario(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Guerrero(nombre, 90, 85, 30, armas)
+Mercenario::Mercenario(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Guerrero(nombre, 90, 85, 30, move(armas))
 {}
 
 void Mercenario::mostrar_info() const {

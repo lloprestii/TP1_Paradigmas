@@ -10,7 +10,7 @@ int numero_aleatorio(int min, int max){
     return min + rand() % (max - min + 1);
 }
 
-shared_ptr<Arma> crear_arma_random(string tipo){
+unique_ptr<Arma> crear_arma_random(string tipo){
     if (tipo == "guerrero"){
             switch(numero_aleatorio(0, 4)){
                 case 0:
@@ -54,11 +54,11 @@ int main(){
     cout << "Cantidad de guerreros: " << cantidad_guerreros << endl;
     cout << "Cantidad de magos: " << cantidad_magos << endl;
 
-    vector<shared_ptr<Personaje>> guerreros;
+    vector<unique_ptr<Personaje>> guerreros;
     for (int i = 0; i < cantidad_guerreros; i++){
         Personajes guerrero_tipo = static_cast<Personajes>(numero_aleatorio(0, 4));
         int cantidad_armas = numero_aleatorio(0, 2);
-        shared_ptr<Personaje> guerrero;
+        unique_ptr<Personaje> guerrero;
         if (cantidad_armas == 0){
             guerrero = PersonajeFactory::personaje_desarmado(guerrero_tipo);
         }
@@ -68,14 +68,14 @@ int main(){
         else{
             guerrero = PersonajeFactory::personaje_armado(guerrero_tipo, make_pair(crear_arma_random("guerrero"), crear_arma_random("guerrero")));
         }
-        guerreros.push_back(guerrero);
+        guerreros.push_back(move(guerrero));
     }
 
-    vector<shared_ptr<Personaje>> magos;
+    vector<unique_ptr<Personaje>> magos;
     for (int i = 0; i < cantidad_magos; i++){
         Personajes mago_tipo = static_cast<Personajes>(numero_aleatorio(5, 8));
         int cantidad_armas = numero_aleatorio(0, 2);
-        shared_ptr<Personaje> mago;
+        unique_ptr<Personaje> mago;
         if (cantidad_armas == 0){
             mago = PersonajeFactory::personaje_desarmado(mago_tipo);
         }
@@ -85,7 +85,7 @@ int main(){
         else{
             mago = PersonajeFactory::personaje_armado(mago_tipo, make_pair(crear_arma_random("mago"), crear_arma_random("mago")));
         }
-        magos.push_back(mago);
+        magos.push_back(move(mago));
     }
     
     cout << "Guerreros: " << endl;

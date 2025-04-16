@@ -1,8 +1,7 @@
 #include "../Headers/Nigromante.hpp"
-#include "../../../Armas/Magicas/Headers/Pocion.hpp"
 
-Nigromante::Nigromante(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Magos(nombre, 60, 150, 10, armas)
+Nigromante::Nigromante(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Magos(nombre, 60, 150, 10, move(armas))
 {}
 
 void Nigromante::mostrar_info() const {

@@ -3,12 +3,12 @@
 
 using namespace std;
 
-Guerrero::Guerrero(string nombre, int vida, int fuerza, int armadura, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas) :
+Guerrero::Guerrero(string nombre, int vida, int fuerza, int armadura, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas) :
     nombre(nombre),
     vida(vida),
     fuerza(fuerza),
     armadura(armadura),
-    armas(armas)
+    armas(move(armas))
 {}
 
 int Guerrero::get_vida() const {
@@ -45,36 +45,36 @@ void Guerrero::set_armadura(int nueva_armadura){
     armadura = nueva_armadura;
 }
 
-void Guerrero::atacar(shared_ptr<Personaje> atacante, shared_ptr<Personaje> objetivo) {
+void Guerrero::atacar(Personaje& atacante, Personaje& objetivo) {
     if (!esta_vivo()) {
         cout << nombre << " no puede atacar porque esta muerto." << endl;
         return;
     }
     
-    if (!objetivo) {
+    if (!objetivo.esta_vivo()) {
         cout << "No hay objetivo para atacar." << endl;
         return;
     }
 
-    if (rand() % 100 < atacante->get_armas().first->get_precision()) {
-        int dano_base = fuerza + atacante->get_armas().first->get_dano_base();
+    if (rand() % 100 < atacante.get_armas().first->get_precision()) {
+        int dano_base = fuerza + atacante.get_armas().first->get_dano_base();
         
-        if (rand() % 100 < atacante->get_armas().first->get_probabilidad_critico()) {
+        if (rand() % 100 < atacante.get_armas().first->get_probabilidad_critico()) {
             dano_base *= 2;
-            cout << atacante->get_nombre() << " realiza un golpe critico!" << endl;
+            cout << atacante.get_nombre() << " realiza un golpe critico!" << endl;
         }
         
-        cout << atacante->get_nombre() << " ataca con " << dano_base << " puntos de daño." << endl;
-        objetivo->recibir_dano(dano_base);
+        cout << atacante.get_nombre() << " ataca con " << dano_base << " puntos de daño." << endl;
+        objetivo.recibir_dano(dano_base);
     } else {
-        cout << atacante->get_nombre() << " falla el ataque!" << endl;
+        cout << atacante.get_nombre() << " falla el ataque!" << endl;
     }
 }
 
-pair<shared_ptr<Arma>, shared_ptr<Arma>> Guerrero::get_armas() const {
+const pair<unique_ptr<Arma>, unique_ptr<Arma>>& Guerrero::get_armas() const {
     return armas;
 }
 
-void Guerrero::set_armas(pair<shared_ptr<Arma>, shared_ptr<Arma>> nuevas_armas) {
-    armas = nuevas_armas;
+void Guerrero::set_armas(pair<unique_ptr<Arma>, unique_ptr<Arma>> nuevas_armas) {
+    armas = move(nuevas_armas);
 }

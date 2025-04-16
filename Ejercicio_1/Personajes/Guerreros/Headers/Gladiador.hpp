@@ -2,6 +2,6 @@
 
 class Gladiador : public Guerrero {
     public:
-        Gladiador(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas);
+        Gladiador(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas);
         void mostrar_info() const override;
 };

@@ -1,8 +1,7 @@
 #include "../Headers/Gladiador.hpp"
-#include "../../../Armas/Combate/Headers/lanza.hpp"
 
-Gladiador::Gladiador(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Guerrero(nombre, 100, 70, 30, armas)
+Gladiador::Gladiador(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Guerrero(nombre, 100, 70, 30, move(armas))
 {}
 
 void Gladiador::mostrar_info() const {

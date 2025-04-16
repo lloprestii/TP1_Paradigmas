@@ -15,9 +15,7 @@ enum class Golpes{
     DefensaYGolpe
 };
 
-
-
-void Resultado(shared_ptr<Personaje> Personaje1, shared_ptr<Personaje> Personaje2, int opcion, Golpes golpeAleatorio){
+void Resultado(unique_ptr<Personaje>& Personaje1, unique_ptr<Personaje>& Personaje2, int opcion, Golpes golpeAleatorio){
         if(opcion == 0 && golpeAleatorio == Golpes::GolpeRapido){
             cout << "El " << Personaje1->get_nombre() << " ataca con " << Personaje1->get_armas().first->get_nombre() << " y hace 10 puntos de dano." << endl;
             Personaje2->recibir_dano(10);

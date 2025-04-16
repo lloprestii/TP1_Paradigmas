@@ -1,8 +1,7 @@
 #include "../Headers/Paladin.hpp"
-#include "../../../Armas/Combate/Headers/garrote.hpp"
 
-Paladin::Paladin(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Guerrero(nombre, 105, 55, 60, armas)
+Paladin::Paladin(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Guerrero(nombre, 105, 55, 60, move(armas))
 {}
 
 void Paladin::mostrar_info() const {

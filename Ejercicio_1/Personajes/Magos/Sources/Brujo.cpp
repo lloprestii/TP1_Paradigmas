@@ -1,8 +1,7 @@
 #include "../Headers/Brujo.hpp"
-#include "../../../Armas/Magicas/Headers/Amuleto.hpp"
 
-Brujo::Brujo(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas) 
-    : Magos(nombre, 80, 120, 25, armas)
+Brujo::Brujo(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas) 
+    : Magos(nombre, 80, 120, 25, move(armas))
 {}
 
 void Brujo::mostrar_info() const {

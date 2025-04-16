@@ -1,8 +1,7 @@
 #include "../Headers/Conjurador.hpp"
-#include "../../../Armas/Magicas/Headers/LibroHechizos.hpp"
 
-Conjurador::Conjurador(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Magos(nombre, 70, 140, 15, armas)
+Conjurador::Conjurador(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Magos(nombre, 70, 140, 15, move(armas))
 {}
 
 void Conjurador::mostrar_info() const {

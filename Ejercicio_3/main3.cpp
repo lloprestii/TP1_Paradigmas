@@ -31,7 +31,7 @@ int main(){
         if(opcion == 9){
             break;
         }
-        shared_ptr<Personaje> Personaje1 = PersonajeFactory::personaje_desarmado(static_cast<Personajes>(opcion));
+        unique_ptr<Personaje> Personaje1 = PersonajeFactory::personaje_desarmado(static_cast<Personajes>(opcion));
         system("clear");
         cout << "Seleccione un tipo de arma:" << endl;
         cout << "0. Espada" << endl;
@@ -48,11 +48,11 @@ int main(){
         if(opcion == 9){
             break;
         }
-        shared_ptr<Arma> armaSeleccionada = PersonajeFactory::crear_arma(static_cast<Armas>(opcion));
-        Personaje1->set_armas(make_pair(armaSeleccionada, nullptr));
+        unique_ptr<Arma> armaSeleccionada = PersonajeFactory::crear_arma(static_cast<Armas>(opcion));
+        Personaje1->set_armas(make_pair(move(armaSeleccionada), nullptr));
 
-        shared_ptr<Arma> armaAleatoria = PersonajeFactory::crear_arma(static_cast<Armas>(numero_aleatorio(0, 8)));
-        shared_ptr<Personaje> Personaje2 = PersonajeFactory::personaje_armado(static_cast<Personajes>(numero_aleatorio(0, 8)),make_pair(armaAleatoria, nullptr));
+        unique_ptr<Arma> armaAleatoria = PersonajeFactory::crear_arma(static_cast<Armas>(numero_aleatorio(0, 8)));
+        unique_ptr<Personaje> Personaje2 = PersonajeFactory::personaje_armado(static_cast<Personajes>(numero_aleatorio(0, 8)),make_pair(move(armaAleatoria), nullptr));
 
         Personaje1->set_armadura(0);
         Personaje2->set_armadura(0);
@@ -61,7 +61,7 @@ int main(){
 
         while(Personaje1->esta_vivo() && Personaje2->esta_vivo()){
             cout << "El jugador 1 tiene " << Personaje1->get_vida() << " HP y el jugador 2 tiene " << Personaje2->get_vida() << " HP." << endl;
-            cout << "Su opcion: (1)Golpe Fuerte, (2)Golpe Rapido, (3)Defensa y Golpe: ";
+            cout << "Su opcion: (0)Golpe Fuerte, (1)Golpe Rapido, (2)Defensa y Golpe: ";
             cin >> opcion;
             Golpes golpeAleatorio = static_cast<Golpes>(numero_aleatorio(0, 2));
             Resultado(Personaje1, Personaje2, opcion, golpeAleatorio);

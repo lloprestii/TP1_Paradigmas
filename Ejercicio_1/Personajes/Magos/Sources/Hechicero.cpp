@@ -1,8 +1,7 @@
 #include "../Headers/Hechicero.hpp"
-#include "../../../Armas/Magicas/Headers/Baston.hpp"
 
-Hechicero::Hechicero(string nombre, pair<shared_ptr<Arma>, shared_ptr<Arma>> armas)
-    : Magos(nombre, 90, 100, 30, armas)
+Hechicero::Hechicero(string nombre, pair<unique_ptr<Arma>, unique_ptr<Arma>> armas)
+    : Magos(nombre, 90, 100, 30, move(armas))
 {}
 
 void Hechicero::mostrar_info() const {
