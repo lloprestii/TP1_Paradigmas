@@ -7,7 +7,7 @@ using namespace std;
 class Personaje;
 
 class ArmaCombate : public Arma {
-    private:
+    protected:
         string nombre;
         int dano_base;
         int durabilidad;

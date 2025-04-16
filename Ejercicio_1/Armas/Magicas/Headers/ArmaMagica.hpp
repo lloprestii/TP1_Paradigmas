@@ -6,7 +6,7 @@
 using namespace std;
 
 class ArmaMagica : public Arma {
-    private:
+    protected:
         string nombre;
         int dano_base;
         int durabilidad;
